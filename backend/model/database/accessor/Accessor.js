@@ -4,8 +4,9 @@ class Accessor{
     }
 
 list = async () =>{
-        const sql = `SELECT Deliverables.deliverable_title, Deliverables.deliverable_details, deliverables_assignment.status, deliverables_assignment.due_date, deliverables_assignment.feedback FROM Deliverables
-        INNER JOIN deliverables_assignment ON Deliverables.deliverable_id = deliverables_assignment.deliverable_id;`
+    const sql = `SELECT Deliverables.DeliverableTitle, Deliverables.DeliverableDetail, AssignmentDevs.AssignmentID, AssignmentDevs.AssignmentDevDuedate, AssignmentDevs.AssignmentDevFeedback, Categories.CategoryName FROM Deliverables
+    INNER JOIN AssignmentDevs ON Deliverables.DeliverableID = AssignmentDevs.AssignmentDevDevID
+    LEFT JOIN Categories ON Deliverables.DeliverableCategoryID = Categories.CategoryID`;
 
         try{
             const [result] = await this.dbConn.query(sql);
@@ -17,9 +18,14 @@ list = async () =>{
         }
     }
     listwithId = async (params) =>{
-        const sql = `SELECT Deliverables.deliverable_title, Deliverables.deliverable_details, deliverables_assignment.status, deliverables_assignment.due_date, deliverables_assignment.feedback FROM Deliverables
-        INNER JOIN deliverables_assignment ON Deliverables.deliverable_id = deliverables_assignment.deliverable_id
-WHERE deliverables_assignment.student_id = ${params}`;
+        const sql = `SELECT Deliverables.DeliverableTitle, Deliverables.DeliverableDetail, AssignmentDevs.AssignmentID, AssignmentDevs.AssignmentDevDuedate, AssignmentDevs.AssignmentDevFeedback, Categories.CategoryName FROM Deliverables
+        INNER JOIN AssignmentDevs ON Deliverables.DeliverableID = AssignmentDevs.AssignmentDevDevID
+        LEFT JOIN Categories ON Deliverables.DeliverableCategoryID = Categories.CategoryID
+        WHERE AssignmentDevs.AssignmentDevUserID = ${params}`;
+
+        
+
+
 
         try{
             const [result] = await this.dbConn.query(sql);

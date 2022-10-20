@@ -1,5 +1,5 @@
 import { Router } from "express";
-import Accessor from "../Accessor.js";
+import Accessor from "../database/accessor/Accessor.js";
 import dbConn from "../database/database-connection.js";
 import Controller from "../controller/controller.js";
 import idSchema from "../validator/id-schema.js";
