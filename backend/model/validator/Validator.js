@@ -1,6 +1,7 @@
 class Validator{
-    constructor(schema){
-        this.idSchema = schema;
+    constructor(schema, value){
+        this.schema = schema;
+        this.value = value;
     }
 
     reportErrors = (errors) => errors.details.map((detail) => detail.message);
@@ -10,6 +11,6 @@ class Validator{
         ? { isError: true, message: `[ Validator] ${this.reportErrors(error)}` }
         : { isError: false, message: null };
     }
-    validateId = (id) => this.validate(this.idSchema, id);
+    validateId = (id) => this.validate(this.schema, id);
 }
 export default Validator;
