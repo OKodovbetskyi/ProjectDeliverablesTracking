@@ -1,0 +1,1 @@
+INSERT INTO Deliverables(DeliverableTitle, DeliverableDetail) VALUES ("CompleteCV","Complete resume and submit for review");

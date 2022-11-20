@@ -11,6 +11,7 @@
     "nodemon": "^2.0.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropdown-select": "^4.9.0",
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
@@ -20,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-server": "cd ../backend/model/ && nodemon start App.js"
+    "start-server": "cd ../backend/model/ && nodemon start server.js"
   },
   "eslintConfig": {
     "extends": [

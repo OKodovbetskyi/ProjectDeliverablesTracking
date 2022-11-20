@@ -1,6 +1,6 @@
 import React from 'react'
 import { Deliverables } from '../components/Deliverable/Deliverables'
-import Logout from '../components/Logout/Logout'
+import Logout from '../components/Header/Header'
 import styles from './HomePage.module.css'
 function HomePage() {
   return (

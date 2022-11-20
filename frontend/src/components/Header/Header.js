@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './Logout.modules.css';
+import styles from './Header.module.css';
 export const Logout = () => {
   return (
     <div className={styles.logout}>

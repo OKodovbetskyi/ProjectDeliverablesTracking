@@ -5,10 +5,7 @@
     border-bottom: 1px solid black;
     padding: 20px 0;
 }
-.leftColumn{
-    width: 80%;
-    justify-content: space-between;
-}
+
 .DeliverableItem .feedback{
     display: flex;
     justify-content: space-between;
@@ -19,19 +16,7 @@
     border-radius: 5px;
     padding: 10px;
 }
-.title{
-    display: inline;
-    width: 80%;
-    margin-right: 20px;
-}
-.category{
-    background: orange;
-    display: inline-block;
-    border-radius: 20px;
-    margin: 5px;
-    padding: 5px;
-    
-}
+
 .dueDate{
     background: rgb(114, 244, 114);
 }

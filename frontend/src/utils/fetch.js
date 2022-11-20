@@ -1,6 +1,6 @@
-function request (state, id){
+function fetch (api,state){
 
-fetch(`http://localhost:3000/api/deliverables/${id}`)
+fetch(`${api}`)
   .then(response => {
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`)
@@ -12,4 +12,4 @@ fetch(`http://localhost:3000/api/deliverables/${id}`)
   }) 
 }
 
-  export default request;
+  export default fetch;

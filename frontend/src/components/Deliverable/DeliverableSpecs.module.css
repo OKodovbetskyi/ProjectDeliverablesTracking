@@ -1,0 +1,17 @@
+.leftColumn{
+    width: 80%;
+    justify-content: space-between;
+}
+.title{
+    display: inline;
+    width: 80%;
+    margin-right: 20px;
+}
+.category{
+    background: orange;
+    display: inline-block;
+    border-radius: 20px;
+    margin: 5px;
+    padding: 5px;
+    
+}
