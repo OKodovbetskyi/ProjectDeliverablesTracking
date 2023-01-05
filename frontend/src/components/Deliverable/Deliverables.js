@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import DeliverableItem from './DeliverableItem'
 import styles from './Deliverables.module.css';
-import request from '../../utils/fetch';
-
+import useLoad from '../../API/useLoad';
 export const Deliverables = () => {
-   const [data, setData] = useState([]);
-    useEffect(()=>{
-        request(setData ,`http://localhost:3000/api/student/deliverables/11`);
-    }, [])
+const [DELIVERABLES_DATA, , message,]= useLoad('/student/deliverables/11');
 
- const deliverableitems = data.map((item) => {
-    return(
-    <DeliverableItem key={item.AssignmentID} title={item.DeliverableTitle} details={item.DeliverableDetail} dueDate={item.AssignmentDevDuedate} feedback={item.AssignmentDevFeedback} status={item.AssignmentDevStatus} category={item.CategoryName}/>
-    )
+
+const deliverableitems = DELIVERABLES_DATA.map((item) => {
+  console.log(item, "from devitem")
+  return(
+    
+    <DeliverableItem deliverable={item} key={item.AssignmentID} title={item.DeliverableTitle} details={item.DeliverableDetail} dueDate={item.AssignmentDevDuedate} feedback={item.AssignmentDevFeedback} status={item.AssignmentDevStatus} category={item.CategoryName}/>
+   
+  )
  }) 
   return (
     <div className={styles.Deliverables}>
-      {deliverableitems}
+      {deliverableitems.length>0? deliverableitems : message}
     </div>
  
   )

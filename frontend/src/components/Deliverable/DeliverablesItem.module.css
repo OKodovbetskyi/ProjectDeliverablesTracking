@@ -21,6 +21,7 @@
     background: rgb(114, 244, 114);
 }
 
+
 @media screen and (max-width: 640px) {
     .leftColumn{
         width: 100%;

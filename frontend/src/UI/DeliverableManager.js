@@ -1,43 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import DeliverableSpecs from '../components/Deliverable/DeliverableSpecs';
 import styles from "./DeliverableManager.module.css";
-import fetch from "../utils/fetch";
 import Header from "../components/Header/Header.js"
-import AddDeliverableForm from '../components/Deliverable/AddDeliverableForm';
+import AddDeliverableForm from '../components/Deliverable/DeliverablesForm';
 import API from '../API/API';
+import useLoad from '../API/useLoad';
+import Panel from '../components/Panel';
+import DeliverablePanel from '../components/DeliverablePanel';
+const endpoint = "/deliverables"
+const categoriesendpoint= "/deliverables/categories";
 const DeliverableManager = () => {
-  const [data, setData] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loadingMessage, setLoadingMessage] = useState("Loading ...");
+  const [DELIVERABLES_DATA, ,loadingMessageDev, loadDeliverables] = useLoad(endpoint);
+  const [categories, ,loadingMessageCat, loadCategories] = useLoad(categoriesendpoint);
   let displaysuccess = "styles.default";
-  
-  const apiCall = async (endpoint) =>{
-    const response = await API.get("/deliverables");
-    response.isSuccess
-      ? setData(response.result)
-      : setLoadingMessage(response.message)
-  }
-  const getCategories = async (endpoint) =>{
-    const response = await API.get("/deliverables/categories");
-    response.isSuccess
-      ? setCategories(response.result)
-      : setLoadingMessage(response.message)
-  }
-
-  
-useEffect(()=>{
-  apiCall() 
-  getCategories()
-}, [])
-const deliverables = data.map((deliverable)=><DeliverableSpecs key={deliverable.DeliverableID} removeId="1" title={deliverable.DeliverableTitle} details={deliverable.DeliverableDetail} category={deliverable.CategoryName} />);
+const deliverables = DELIVERABLES_DATA.map((deliverable)=><Panel.Container><DeliverablePanel key={deliverable.DeliverableID} deliverable = {deliverable} categories={categories} reloadDeliverables={()=>loadDeliverables('/deliverables')}/></Panel.Container>);
 const handleSubmit = async (deliverable)=>{
   const response = await API.post("/deliverables" , deliverable);
   if (response.isSuccess){ displaysuccess = "styles.success" };
   return response.isSuccess
-  ? apiCall() || true 
+  ? loadDeliverables(endpoint) || true 
   : false;
 }
+const initialDeliverable = {
+  DeliverableTitle:"Please enter title",
+  DeliverableDetail:"Please enter details ",
+  DeliverableCategoryID:2
+}
+
   return (
     <div>
      <Header />
@@ -47,11 +37,11 @@ const handleSubmit = async (deliverable)=>{
  
 
         <div className={styles.formDiv}>
-            <AddDeliverableForm categories={categories} onSubmit={handleSubmit}/>
+            <AddDeliverableForm categories={categories} onSubmit={handleSubmit} initialDeliverable={initialDeliverable}/>
         </div>
         <div className={styles.deliverablesDiv}>
         <h2>All Deliverables</h2>
-        {data.length>0? deliverables: loadingMessage}
+        {DELIVERABLES_DATA.length>0 ? deliverables: loadingMessageDev}
         </div>
     </div>
     </div>
