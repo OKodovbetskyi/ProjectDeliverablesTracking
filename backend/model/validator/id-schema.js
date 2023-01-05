@@ -4,7 +4,8 @@ const idSchema =joi.number().integer().min(1).required();
 
 export const deliverableSchema = joi.object({
     DeliverableTitle: joi.string().min(10).required(),
-    DeliverableDetail: joi.string().required()
+    DeliverableDetail: joi.string().required(),
+    DeliverableCategoryID: joi.number(),
 })
 
 export const categorySchema = joi.object({
