@@ -1,4 +1,4 @@
-/*import request from 'supertest';
+import request from 'supertest';
 import app from '../model/App';
 
 describe("GET api/deliverables", ()=>{

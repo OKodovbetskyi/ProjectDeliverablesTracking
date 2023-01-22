@@ -21,23 +21,77 @@ app.use(express.urlencoded({extended:true}));
 const validator = new Validator(idSchema);
 const delivearableValidator = new Validator(deliverableSchema);
 
+//SQL query prepared statement builders
+const buildDeliverablesReadQuery = (id, variant) =>{
+    {let table = '((Deliverables INNER JOIN AssignmentDevs ON Deliverables.DeliverableID = AssignmentDevs.AssignmentDevDevID) LEFT JOIN Categories ON Deliverables.DeliverableCategoryID = Categories.CategoryID)';
+    let fields = ["DeliverableTitle", "DeliverableDetail", "AssignmentID", "AssignmentDevDuedate", "AssignmentDevFeedback", "CategoryName","AssignmentDevStatus"];
+    let sql = '';
 
+    switch (variant){
+       case 'student':
+            sql = `SELECT ${fields} FROM ${table}`
+            if (id) sql += `WHERE AssignmentDevUserID =:ID`;
+            break;
+        case 'deliverable':
+            sql = `SELECT * FROM Deliverables `;
+            if (id) sql += ` WHERE DeliverableID =:ID`
+            break;
+        default: 
+            sql = `SELECT DeliverableID, DeliverableTitle, DeliverableDetail,CategoryName, CategoryID FROM Deliverables 
+            LEFT JOIN Categories ON 
+            Deliverables.DeliverableCategoryID = Categories.CategoryID`
+            if (id) sql += ` WHERE DeliverableID =:ID`;
+    }
+    return {sql, data: {ID: id} };
+    }}
+const buildDeliverablesCreateQuery = (record) =>{
+        let table = 'Deliverables';
+        let fields = ["DeliverableTitle", "DeliverableDetail"];
+        let sql= `INSERT INTO ${table}
+                SET 
+                DeliverableTitle ="${record['DeliverableTitle']}",
+                DeliverableDetail="${record['DeliverableDetail']}",
+                DeliverableCategoryID="${record['DeliverableCategoryID']}"  `
+
+        return {sql, data :record };    
+    }    
+const buildCategoryCreateQuery = (record) =>{
+    let table = 'Categories';
+    let fields = ["CategoryName"];
+    let sql= `INSERT INTO Categories
+            SET 
+            CategoryName="${record['CategoryName']}"`
+    return {sql, data:record};
+    }  
+const buildDeliverablesUpdateQuery = (id, record) =>{
+    let table = 'Deliverables ';
+    let mutablefieds = ["DeliverableTitle", "DeliverableDetail"];
+    let sql= `UPDATE Deliverables SET DeliverableTitle="${record.DeliverableTitle}", DeliverableDetail="${record.DeliverableDetail}" WHERE DeliverableID =:DeliverableID`
+    return {sql, data: {...record, DeliverableID:id}}
+
+    }
+
+const buildDeliverablesDeleteQuery = (id) =>{
+    let sql= `DELETE FROM Deliverables WHERE DeliverableID =:DeliverableID`
+    return {sql, data: {DeliverableID:id }}
+    }
 //Controllers 
 const getDeliverablesController= async  (req ,res) =>{
         const id = req.params.id;
-        const sql = buildDeliverablesSelectSql(id,null);
-        const {isSuccess, result, message: accesorMessage} = await read(sql);
+        const sql = buildDeliverablesReadQuery(id,null);
+        const {isSuccess, result, message: accesorMessage} = await read(sql,id);
         if (!isSuccess) return res.status(400).json({message: accesorMessage});
 
         res.status(200).json(result);
     }
 
 const getStudentDeliverableController = async (req, res) =>{
-    const sql = buildDeliverablesSelectSql(req.params.uid, 'student');
-        const {isError, message: validatorMessage} = validator.validateId(req.params.uid);
+    const id =req.params.uid;
+    const query = buildDeliverablesReadQuery(id, 'student');
+        const {isError, message: validatorMessage} = validator.validateId(id);
         if (isError) return res.status(400).json({message: validatorMessage});
 
-        const { isSuccess, result, message: accessorMessage } = await  read(sql);
+        const { isSuccess, result, message: accessorMessage } = await read(query);
         if(!isSuccess) return res.status(400).json({ message: accessorMessage });
 
         res.json(result);    
@@ -45,33 +99,32 @@ const getStudentDeliverableController = async (req, res) =>{
 const getCategoriesController = async  (req ,res) =>{
     const id = req.params.id;
     const sql =await buildCategoriesSelectSql(id);
-    const {isSuccess, result, message: accesorMessage} = await read(sql);
+    const {isSuccess, result, message: accesorMessage} = await read(sql, id);
     if (!isSuccess) return res.status(400).json({message: accesorMessage});
 
     res.json(result);
 }
-const buildSetFields = (fields) =>fields.reduce((setSQL,field,index)=>
-    setSQL + `${field}=:${field}`+ ((index=== fields.length-1) ? '' : ', '),'SET ');
 
-const buildDeliverablesUpdateSql = (id, obj) =>{
-    let table = 'Deliverables ';
-    let mutablefieds = ["DeliverableTitle", "DeliverableDetail"];
-    return `UPDATE Deliverables SET DeliverableTitle="${obj.DeliverableTitle}", DeliverableDetail="${obj.DeliverableDetail}" WHERE DeliverableID =${id}`
-    }
-
-const buildDeliverablesDeleteSql = (id, obj) =>{
-    let table = 'Deliverables ';
-    let mutablefieds = ["DeliverableTitle", "DeliverableDetail"];
-    return `DELETE FROM Deliverables WHERE DeliverableID =${id}`
-    }
 const postDeliverablesController = async (req, res) =>{
-    const {isError, message: validatorMessage} = delivearableValidator.validate(deliverableSchema, req.body);
+    const record = req.body;
+    const {isError, message: validatorMessage} = delivearableValidator.validate(deliverableSchema, record);
     if (isError) return res.status(400).json({message: validatorMessage});
     
-    const sql = buildDeliverablesInsert(req.body, null);
+    const query = buildDeliverablesCreateQuery(record);
 
-    const {isSuccess, result, message:accesorMessage} = await create(sql);
+    const {isSuccess, result, message:accesorMessage} = await create(query);
+
     if (!isSuccess) return res.status(400).json({message: accesorMessage});
+    res.status(201).json(result);
+}
+const postCategoryController = async (req, res) =>{
+    const record = req.body;
+    const {isError, message: validatorMessage} = validator.validate(categorySchema, record);
+    if (isError) return res.status(400).json({message: validatorMessage});
+    const query = buildCategoryCreateQuery(record);
+
+    const {isSuccess, result, message:accesorMessage} = await createCategories(query);
+    if (!isSuccess) return res.status(404).json({message: accesorMessage});
     res.status(201).json(result);
 }
 const putDeliverablesController = async (req, res) =>{
@@ -79,9 +132,8 @@ const putDeliverablesController = async (req, res) =>{
     const id = req.params.id;
     const record = req.body;  
     //Access data
-    const sql = buildDeliverablesUpdateSql(id, req.body);
-    console.log(sql)
-    const {isSuccess, result, message:accesorMessage} = await updateDeliverables(sql, id, record);
+    const query = buildDeliverablesUpdateQuery(id, record);
+    const {isSuccess, result, message:accesorMessage} = await updateDeliverables(query);
     if (!isSuccess) return res.status(400).json({message: accesorMessage});
     //Response to request
     res.status(201).json(result);
@@ -90,26 +142,15 @@ const deleteDeliverablesController = async (req, res) =>{
     //Validate request
     const id = req.params.id;
     //Access data
-    const sql = buildDeliverablesDeleteSql(id);
-    console.log(sql)
-    const {isSuccess, result, message:accesorMessage} = await deleteDeliverables(sql,id);
+    const query = buildDeliverablesDeleteQuery(id);
+    const {isSuccess, result, message:accesorMessage} = await deleteDeliverables(query);
     if (!isSuccess) return res.status(400).json({message: accesorMessage});
     //Response to request
     res.status(200).json({message:accesorMessage});
 }
-const postCategoryController = async (req, res) =>{
-    const {isError, message: validatorMessage} = validator.validate(categorySchema, req.body);
-    if (isError) return res.status(400).json({message: validatorMessage});
-    
-    const sql = buildCategoryInsert(req.body, null);
-    const {isSuccess, result, message:accesorMessage} = await create(sql, 'categories');
-    if (!isSuccess) return res.status(404).json({message: accesorMessage});
-    res.status(201).json(result);
-}
-
-const read = async (sql) =>{
+const read = async (query) =>{
             try{
-                const [result] = await dbConn.query(sql);
+                const [result] = await dbConn.query(query.sql, query.data);
                 return result.length === 0
                 ?  {isSuccess: false ,result:null, message: 'No records found'}
                 : {isSuccess: true, result:result, message: 'Records successfuly recovered'};
@@ -117,9 +158,9 @@ const read = async (sql) =>{
                 return {isSuccess: false, result: null, message: `Failed to recover records ${error.message}`};
             }
         }
- const deleteDeliverables = async (sql,id) =>{
+const deleteDeliverables = async (deleteQuery) =>{
     try{
-        const status = await dbConn.query(sql);
+        const status = await dbConn.query(deleteQuery.sql, deleteQuery.data);
         return status[0].affectedRows === 0
         ?  {isSuccess: false ,result:null, message: `Failed to delete record ${id}`} 
         :{isSuccess: true, result:null, message: 'Records successfuly deleted'}
@@ -127,13 +168,13 @@ const read = async (sql) =>{
         return {isSuccess: false, result: null, message: `Failed to execute query ${error.message}`};
     }
         }
-const updateDeliverables = async (sql,id, record) =>{
+const updateDeliverables = async (updateQuery) =>{
             try{
-                const status = await dbConn.query(sql);
+                const status = await dbConn.query(updateQuery.sql, updateQuery.data);
                 if (status[0].affectedRows === 0){
                     return {isSuccess: false, result: null, message: `Failed to update record: no rows affected.`};
                 }
-                const recoverRecord = buildDeliverablesSelectSql(id, null);
+                const recoverRecord = buildDeliverablesReadQuery(updateQuery.data.DeliverableID, null);
                 console.log(recoverRecord)
                 const {isSuccess, result, message} = await read(recoverRecord);
                 return isSuccess
@@ -144,13 +185,28 @@ const updateDeliverables = async (sql,id, record) =>{
                 return {isSuccess: false, result: null, message: `Failed to execute query ${error.message}`};
             }
         }
-const create = async (sql, option) =>{
+const create = async (query, option) =>{
             try{
-                const status = await dbConn.query(sql);
-                const recoverRecord = buildDeliverablesSelectSql(status[0].insertId, option);
+                const status = await dbConn.query(query.sql);
+                const recoverRecord = buildDeliverablesReadQuery(status[0].insertId, option);
+                console.log(recoverRecord)
 
                 const {isSuccess, result, message} = await read(recoverRecord);
-                console.warn(result);
+                return isSuccess
+                ?  {isSuccess: true, result:result, message: 'Records successfuly recovered'}
+                : {isSuccess: false ,result:null, message: `Failed to recover the inserted record ${message}`};
+                
+            } catch (error) {
+                return {isSuccess: false, result: null, message: `Failed to recover records ${error.message}`};
+            }
+        }
+const createCategories = async (query, option) =>{
+            try{
+                const status = await dbConn.query(query.sql);
+                const recoverRecord = buildCategoriesSelectSql(status[0].insertId, option);
+                console.log(recoverRecord)
+
+                const {isSuccess, result, message} = await read(recoverRecord);
                 return isSuccess
                 ?  {isSuccess: true, result:result, message: 'Records successfuly recovered'}
                 : {isSuccess: false ,result:null, message: `Failed to recover the inserted record ${message}`};
@@ -162,68 +218,18 @@ const create = async (sql, option) =>{
 const buildCategoriesSelectSql=(id)=>{
     let sql = `SELECT * FROM Categories `;
     if (id) sql += ` WHERE CategoryID = ${id}`
-        return sql;
+    return {sql};
 }
  
-    const buildDeliverablesSelectSql = (id, variant) =>{
-        let table = '((Deliverables INNER JOIN AssignmentDevs ON Deliverables.DeliverableID = AssignmentDevs.AssignmentDevDevID) LEFT JOIN Categories ON Deliverables.DeliverableCategoryID = Categories.CategoryID)';
-        let fields = ["DeliverableTitle", "DeliverableDetail", "AssignmentID", "AssignmentDevDuedate", "AssignmentDevFeedback", "CategoryName","AssignmentDevStatus"];
-        let sql = '';
 
-        switch (variant){
-           case 'student':
-                sql = `SELECT ${fields} FROM ${table}`
-                if (id) sql += `WHERE AssignmentDevUserID =${id}`;
-                break;
-            case 'deliverable':
-                sql = `SELECT * FROM Deliverables `;
-                if (id) sql += ` WHERE DeliverableID = ${id}`
-                break;
-            default: 
-                sql = `SELECT DeliverableID, DeliverableTitle, DeliverableDetail,CategoryName, CategoryID FROM Deliverables 
-                LEFT JOIN Categories ON 
-                Deliverables.DeliverableCategoryID = Categories.CategoryID`
-                if (id) sql += ` WHERE DeliverableID =${id}`;
-        }
-        return sql;
-    }
-    const buildDeliverablesInsert = (record, variant) =>{
-        let table = 'Deliverables';
-        let fields = ["DeliverableTitle", "DeliverableDetail"];
-        
-        let sql =''
-        switch (variant) {
-            default:
-               sql= `INSERT INTO ${table}
-                SET 
-                DeliverableTitle ="${record['DeliverableTitle']}",
-                DeliverableDetail="${record['DeliverableDetail']}",
-                DeliverableCategoryID="${record['DeliverableCategoryID']}"  `
-              
-        }
-        return sql;    
-    }    
-const buildCategoryInsert = (record,variant) =>{
-    let table = 'Categories';
-    let fields = ["CategoryName"];
-    
-    let sql =''
-    switch (variant) {
-        default:
-            sql= `INSERT INTO Categories
-            SET 
-            CategoryName="${record['CategoryName']}"`
-    }
-    return sql;
-    }  
 //Endpoints
 //GET
 app.get('/', (req,res)=>{res.status(200)})
-app.get('/api/deliverables', getDeliverablesController);
-app.get('/api/deliverables/categories', getCategoriesController);
-app.get('/api/deliverables/categories/:id', getCategoriesController);
-app.get('/api/deliverables/:id', getDeliverablesController);
-app.get('/api/student/deliverables/:uid', getStudentDeliverableController);
+app.get('/api/deliverables', (req,res)=>getDeliverablesController(req,res));
+app.get('/api/deliverables/categories',(req,res)=> getCategoriesController(req,res));
+app.get('/api/deliverables/categories/:id',(req,res)=> getCategoriesController(req,res));
+app.get('/api/deliverables/:id',(req,res)=> getDeliverablesController(req,res));
+app.get('/api/student/deliverables/:uid',(req,res)=> getStudentDeliverableController(req,res));
 //POST
 app.post('/api/deliverables/categories', postCategoryController);
 app.post('/api/deliverables', postDeliverablesController);
@@ -233,7 +239,7 @@ app.put('/api/deliverables/:id', putDeliverablesController);
 
 
 //Delete
-app.delete('/api/deliverables/:id', deleteDeliverablesController);
+app.delete('/api/deliverables/:id',(req,res)=> deleteDeliverablesController(req,res));
 
 //Start Server
 
