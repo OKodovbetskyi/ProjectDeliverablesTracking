@@ -8,9 +8,6 @@ import Validator from "./validator/Validator.js";
 
 //Configuration server.
 const app = express();
-
-
-
 //Configure middleware
 app.use(function(req,res,next){
     res.header("Access-Control-Allow-Origin", "*");
@@ -26,8 +23,6 @@ const delivearableValidator = new Validator(deliverableSchema);
 
 
 //Controllers 
-
-
 const getDeliverablesController= async  (req ,res) =>{
         const id = req.params.id;
         const sql = buildDeliverablesSelectSql(id,null);
@@ -56,7 +51,7 @@ const getCategoriesController = async  (req ,res) =>{
     res.json(result);
 }
 const buildSetFields = (fields) =>fields.reduce((setSQL,field,index)=>
-    setSQL + `${field}=${field}`+ ((index=== fields.length-1) ? '' : ', '),'SET ');
+    setSQL + `${field}=:${field}`+ ((index=== fields.length-1) ? '' : ', '),'SET ');
 
 const buildDeliverablesUpdateSql = (id, obj) =>{
     let table = 'Deliverables ';
@@ -69,7 +64,6 @@ const buildDeliverablesDeleteSql = (id, obj) =>{
     let mutablefieds = ["DeliverableTitle", "DeliverableDetail"];
     return `DELETE FROM Deliverables WHERE DeliverableID =${id}`
     }
-
 const postDeliverablesController = async (req, res) =>{
     const {isError, message: validatorMessage} = delivearableValidator.validate(deliverableSchema, req.body);
     if (isError) return res.status(400).json({message: validatorMessage});
@@ -150,7 +144,6 @@ const updateDeliverables = async (sql,id, record) =>{
                 return {isSuccess: false, result: null, message: `Failed to execute query ${error.message}`};
             }
         }
-
 const create = async (sql, option) =>{
             try{
                 const status = await dbConn.query(sql);
@@ -166,11 +159,11 @@ const create = async (sql, option) =>{
                 return {isSuccess: false, result: null, message: `Failed to recover records ${error.message}`};
             }
         }
-    const buildCategoriesSelectSql=(id)=>{
-            let sql = `SELECT * FROM Categories `;
-            if (id) sql += ` WHERE CategoryID = ${id}`
-            return sql;
-    }
+const buildCategoriesSelectSql=(id)=>{
+    let sql = `SELECT * FROM Categories `;
+    if (id) sql += ` WHERE CategoryID = ${id}`
+        return sql;
+}
  
     const buildDeliverablesSelectSql = (id, variant) =>{
         let table = '((Deliverables INNER JOIN AssignmentDevs ON Deliverables.DeliverableID = AssignmentDevs.AssignmentDevDevID) LEFT JOIN Categories ON Deliverables.DeliverableCategoryID = Categories.CategoryID)';
@@ -210,22 +203,19 @@ const create = async (sql, option) =>{
         }
         return sql;    
     }    
-    const buildCategoryInsert = (record,variant) =>{
-        let table = 'Categories';
-        let fields = ["CategoryName"];
-        
-        let sql =''
-        switch (variant) {
-            default:
-                sql= `INSERT INTO Categories
-                SET 
-                CategoryName="${record['CategoryName']}"`
-        }
-        return sql;
+const buildCategoryInsert = (record,variant) =>{
+    let table = 'Categories';
+    let fields = ["CategoryName"];
+    
+    let sql =''
+    switch (variant) {
+        default:
+            sql= `INSERT INTO Categories
+            SET 
+            CategoryName="${record['CategoryName']}"`
+    }
+    return sql;
     }  
-
-
-
 //Endpoints
 //GET
 app.get('/', (req,res)=>{res.status(200)})
@@ -233,10 +223,7 @@ app.get('/api/deliverables', getDeliverablesController);
 app.get('/api/deliverables/categories', getCategoriesController);
 app.get('/api/deliverables/categories/:id', getCategoriesController);
 app.get('/api/deliverables/:id', getDeliverablesController);
-
 app.get('/api/student/deliverables/:uid', getStudentDeliverableController);
-
-
 //POST
 app.post('/api/deliverables/categories', postCategoryController);
 app.post('/api/deliverables', postDeliverablesController);

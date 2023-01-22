@@ -4,21 +4,19 @@ import ToolTipDecorator from './ToolTipDecorator'
 import Panel from './Panel'
 import DeliverableForm from './Deliverable/DeliverablesForm'
 import API from '../API/API'
+
 const DeliverablePanel = ({deliverable ,categories,reloadDeliverables}) => {
     const [selectedForm, setSelectedForm] = useState(0);
     const handleModify = (id) =>{setSelectedForm(id === selectedForm ? 0 : id)}
     const handleDelete = async (id) =>{
-      const response = await API.delete(`/deliverables/${id}` , null);
+    const response = await API.delete(`/deliverables/${id}` , null);
         if (response.isSuccess){
             reloadDeliverables("/deliverables")
             setSelectedForm(0);
                 }else{
                    return false;
                 }
-    
       }
-    
-    
     const handleSubmit = async (deliverable)=>{
         console.log("deliverable")
         const response = await API.put(`/deliverables/${deliverable.DeliverableID}` , deliverable);

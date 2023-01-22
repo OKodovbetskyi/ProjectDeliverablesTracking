@@ -5,7 +5,7 @@ const dbConfig = {
     port: process.env.PORT || 3307,
     host: process.env.HOST || 'localhost',
     user: process.env.USER || 'alex',
-   password: process.env.PASSWORD || '1234',
+    password: process.env.PASSWORD || '1234',
     namedPlaceholders: true
 
 };
