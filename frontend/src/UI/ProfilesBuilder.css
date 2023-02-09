@@ -1,0 +1,24 @@
+.Builder-container{
+  margin: 15px;
+}
+.Builder-editor-container{
+    display: flex;
+    justify-content: space-around;
+}
+.Builder-editor-container div{
+   width: 80%;
+}
+.ProfileDeliverables-deliverables{
+    border: 1px solid black;
+    height: 70%;
+    margin: 10px 0;
+  
+}
+
+.textFieldDetails{
+  height: 100px;
+  width: 100%;
+}
+.TextField{
+  width: 100%;
+}

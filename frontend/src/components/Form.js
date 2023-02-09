@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import styles from "./FormItem.module.css";
+import "./Form.css"
 export default function Form({children, onSubmit}){
   const handleSubmit = () => onSubmit();
   return(
@@ -12,9 +12,9 @@ export default function Form({children, onSubmit}){
 }
 const Item = ({children, label, htmlFor, advice, error}) => {
 
-  return (<div>
+  return (<div className='Form-Item'>
     <label htmlFor={htmlFor}>{label}</label>
-    {advice && <p className={styles.error}>{advice}</p>}
+    {advice && <p >{advice}</p>}
     {children}
     {error && <p>{error}</p>}
     </div>
@@ -33,7 +33,6 @@ const isValidRecord = (deliverable) =>{
       errors[key] = null;
     } else {
       errors[key] = errorMessage[key];
-      console.log(record)
       isRecordValid = false;
     }
   })
@@ -43,9 +42,13 @@ const isValidRecord = (deliverable) =>{
 const handleSubmit = (e) =>{
  
   e.preventDefault();
-  isValidRecord(record) && onSubmit(record)
-  console.log(isValidRecord(record))
-  setErrors({...errors})
+  if (isValidRecord(record)){
+    onSubmit(record)
+  } else{
+    setErrors({...errors})
+  }
+ 
+  
 }
 ///////////////////////////////////////////////
 const handleChange = (e) =>{

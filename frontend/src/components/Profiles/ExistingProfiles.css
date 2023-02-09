@@ -1,0 +1,13 @@
+.ExistingProfiles{
+   width: 100%;
+   text-align: center;
+   
+}
+.Profiles-Container{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.Card-Wrapper{
+
+}

@@ -3,7 +3,7 @@ import DeliverableItem from './DeliverableItem'
 import styles from './Deliverables.module.css';
 import useLoad from '../../API/useLoad';
 export const Deliverables = () => {
-const [DELIVERABLES_DATA, , message,]= useLoad('/student/deliverables/11');
+const [DELIVERABLES_DATA, , message,]= useLoad('/deliverables/student/11');
 
 
 const deliverableitems = DELIVERABLES_DATA.map((item) => {

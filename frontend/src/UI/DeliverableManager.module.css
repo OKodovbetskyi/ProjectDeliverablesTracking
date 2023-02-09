@@ -16,6 +16,9 @@
 .default{
     opacity: 0;
 }
+.MessageHolder{
+    height: 30px;
+}
 @media screen and (max-width: 640px) {
     .deliverablesManagerDiv{
         flex-direction: column;

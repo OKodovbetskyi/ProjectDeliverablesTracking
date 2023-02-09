@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import DeliverableSpecs from '../components/Deliverable/DeliverableSpecs';
 import styles from "./DeliverableManager.module.css";
@@ -8,34 +8,41 @@ import API from '../API/API';
 import useLoad from '../API/useLoad';
 import Panel from '../components/Panel';
 import DeliverablePanel from '../components/DeliverablePanel';
+import CustomAlert from '../components/CustomAlert';
+import Message from '../components/CustomAlert';
 const endpoint = "/deliverables"
 const categoriesendpoint= "/deliverables/categories";
 const DeliverableManager = () => {
   const [DELIVERABLES_DATA, ,loadingMessageDev, loadDeliverables] = useLoad(endpoint);
   const [categories, ,loadingMessageCat, loadCategories] = useLoad(categoriesendpoint);
+const [feedback, setFeedBack] = useState(true);
+const [message, showMessage] = useState(false);
   let displaysuccess = "styles.default";
-const deliverables = DELIVERABLES_DATA.map((deliverable)=><Panel.Container><DeliverablePanel key={deliverable.DeliverableID} deliverable = {deliverable} categories={categories} reloadDeliverables={()=>loadDeliverables('/deliverables')}/></Panel.Container>);
+const reversed = [...DELIVERABLES_DATA].reverse();
+const deliverables = reversed.map((deliverable)=><Panel.Container><DeliverablePanel key={deliverable.DeliverableID} deliverable = {deliverable} categories={categories} reloadDeliverables={()=>loadDeliverables('/deliverables')}/></Panel.Container>);
+
 const handleSubmit = async (deliverable)=>{
   const response = await API.post("/deliverables" , deliverable);
-  if (response.isSuccess){ displaysuccess = "styles.success" };
+  if (response.isSuccess){ 
+    setFeedBack(true)
+   };
   return response.isSuccess
-  ? loadDeliverables(endpoint) || true 
-  : false;
+  ? loadDeliverables(endpoint) && showMessage(true)
+  : setFeedBack(false) ,showMessage(true) ;
 }
+
+setTimeout(()=>{
+showMessage(false);
+},2000)
 const initialDeliverable = {
-  DeliverableTitle:"Please enter title",
-  DeliverableDetail:"Please enter details ",
-  DeliverableCategoryID:2
+
 }
 
   return (
     <div>
-     <Header />
-     <Link to='/admin'>Admin Panel</Link>
-  
+     <Header userType="admin" />
+  <div className={styles.MessageHolder}>{message && <CustomAlert  feedback={feedback}/> }</div>
     <div className={styles.deliverablesManagerDiv}>
- 
-
         <div className={styles.formDiv}>
             <AddDeliverableForm categories={categories} onSubmit={handleSubmit} initialDeliverable={initialDeliverable}/>
         </div>
@@ -45,6 +52,7 @@ const initialDeliverable = {
         </div>
     </div>
     </div>
+ 
   )
 }
 

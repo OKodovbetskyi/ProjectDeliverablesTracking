@@ -4,6 +4,7 @@ export const API = {};
 API.get= (endpoint) => callFetch(endpoint, "GET", null);
 const callFetch = async (endpoint, method, dataObj) =>{
     //Build request object
+    console.log(dataObj, 'fetch')
     let requestObj = {method: method};
     if (dataObj) requestObj = {
         ...requestObj,

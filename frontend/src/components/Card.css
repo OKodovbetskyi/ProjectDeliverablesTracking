@@ -1,0 +1,28 @@
+.Card-Wrapper {
+    margin: 10px;
+    display: inline-block;
+    width: 250px;
+    padding: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+ 
+}
+Button.Button-Card{
+    margin: 5px;
+    bottom: 10px;
+}
+.Card-Wrapper .ButtonsHolder{
+    display: flex;
+    justify-content: flex-end;
+    margin: 5% 0 0 0;
+}
+Button.Button-Card.Edit{
+    background-color: gray;
+}
+.deliverableCard-container{
+    border: 2px solid orange;
+    margin: 5px;
+}

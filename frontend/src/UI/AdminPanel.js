@@ -1,11 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header/Header';
+import './AdminPanel.css';
+import Draggable from './Draggable';
 const ManagerPage = () => {
   return (
-    <div>ManagerPage
+    <div>
     <Header />
-    <Link to='/admin/managedeliverables'>Manage Deliverables</Link>
+    <Link to='managedevs'>Manage Deliverables</Link>
+    <Link to='profiles'>Deliverable Profiles</Link>
+    <Link to='profilesbuilder'>Deliverable Profiles</Link>
     </div>
     
   )

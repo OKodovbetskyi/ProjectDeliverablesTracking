@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import Form from '../Form';
-import styles from './Deliverables.module.css';
+import './DeliverablesForm.css';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 const initialDeliverable = {
   DeliverableID:"",
-  CategoryName:"a",
-  CategoryID:"a",
-  DeliverableTitle: "Deliverable Name",
-  DeliverableDetail: "Details...",
-  DeliverableCategoryID: "a",
+  CategoryName:"",
+  CategoryID:"",
+  DeliverableTitle: "",
+  DeliverableDetail: "",
+  DeliverableCategoryID: "",
 }
 const DeliverableForm = ({categories, onSubmit, initialDeliverable}) => {
   
@@ -31,6 +33,7 @@ const DeliverableForm = ({categories, onSubmit, initialDeliverable}) => {
   
     const conformance = ['DeliverableCategoryID'];
     const [deliverable, errors, handleChange,handleSubmit]=Form.useForm(initialDeliverable, conformance, onSubmit, validation);
+    console.log(errors)
     const options = categories.map(category=>category.id===deliverable.CategoryID 
       ? <option  value={category.CategoryID} defaultValue>{ category.CategoryName
         }</option>
@@ -39,27 +42,39 @@ const DeliverableForm = ({categories, onSubmit, initialDeliverable}) => {
     <Form onSubmit={handleSubmit}>
 <Form.Item 
   name= "Deliverable Title"
-  label="Deliverable Title"
   htmlFor = "DeliverableTitle"
-  advice = {errors.DeliverableTitle}
 >
-<input 
-name="DeliverableTitle" 
-value={deliverable.DeliverableTitle}
+<TextField
+className="TextField"
+id="filled-basic" 
+label="Deliverable Title" 
+variant="filled"
 type='text' 
-onChange={handleChange}/>
+name='DeliverableTitle'
+size='Large'
+onChange={handleChange}  
+error = {errors.DeliverableTitle}
+helperText = {errors.DeliverableTitle}
+/>
+
 </Form.Item>
 <Form.Item 
-  name= "Deliverable Details"
-  label="Deliverable Details"
   htmlFor = "DeliverableDetails"
-  advice = {errors.DeliverableDetail}
 >
-<input
- type='text' 
- name='DeliverableDetail'
- value={deliverable.DeliverableDetail}
- onChange={handleChange}/> 
+<TextField
+className="TextField"
+id="filled-basic" 
+label="Deliverable Details" 
+variant="filled"
+type='text' 
+name='DeliverableDetail'
+size='Large'
+onChange={handleChange}  
+error = {errors.DeliverableDetails}
+helperText = {errors.DeliverableDetails}
+
+/>
+ 
 </Form.Item>
 <Form.Item
   name="Deliverable Category"
@@ -72,8 +87,9 @@ onChange={handleChange}/>
     {options}
   </select>
 </Form.Item>
-<button onClick={handleSubmit}>Add</button>
 
+
+<Button className="Button" variant="contained"onClick={handleSubmit} color="success">Add</Button>
 </Form> 
   )
 }

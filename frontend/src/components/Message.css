@@ -1,0 +1,13 @@
+.success-message{
+    width: 100%;
+    font-size: 14pt;
+    text-align: center;
+    color: black;
+    
+}
+.success-message p {
+    background-color: greenyellow;
+    display: inline;
+    padding: 5px;
+    border-radius: 15px;
+}
