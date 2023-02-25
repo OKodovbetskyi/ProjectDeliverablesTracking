@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import deliverableRouter from "./routers/deliverable-router.js";
-
+import profilesRouter from "./routers/profile-router.js"
 //Configuration server.
 const app = express();
 //Configure middleware
@@ -19,7 +19,7 @@ app.use(express.urlencoded({extended:true}));
 
  
 app.use('/api/deliverables', deliverableRouter);
-//Start Server
-
+app.use('/api/profiles', profilesRouter);
+// *Start Server
 
 export default app;
