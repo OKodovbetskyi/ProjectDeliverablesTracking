@@ -9,7 +9,21 @@ class Validator{
          });
         this.deleteSchema = this.idSchema.required();
     }
-
+    //validate
+    validate = (schema, value) =>{
+        const {error} = schema.validate(value, {abortEarly: false});
+        return error
+        ? {isValid: false, message: this.reportErrors(error)}
+        : {isValid: true, message: null}
+    }
+    //get schema
+    get = (value) => this.validate(this.getSchema, value);
+    //post schema
+    post = (value) => this.validate(this.postSchema, value);
+    //put schema
+    put = (value) => this.validate(this.putSchema, value);
+    //put schema
+    delete = (value) => this.validate(this.deleteSchema, value);
     //properties
     idSchema = joi.number().integer().min(1);
     //helpers
