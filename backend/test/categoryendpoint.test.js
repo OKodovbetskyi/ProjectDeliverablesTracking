@@ -1,4 +1,5 @@
-/*import request from 'supertest';
+
+import request from 'supertest';
 import app from '../model/App';
 
 describe("GET api/deliverables/categories", ()=>{
@@ -18,23 +19,19 @@ describe("GET api/deliverables/categories", ()=>{
 })
 
 describe("POST api/deliverables/categories", ()=>{
-    test('Should respond with status 200', async ()=>{
-        const res =await (await (request(app).post('/api/deliverables/categories')).send(
-            {
-                "CategoryName":'Assingment'
-            }
-        ))
-        expect(res.statusCode).toBe(201)
+    const data=  { "CategoryName":'Assingment' }
+    const res =await (await (request(app).
+    post('/api/deliverables/categories')).
+    send(data))
+    test('Should respond with status 200', async ()=>{   
+        expect(res.statusCode).toBe(200)
     })
     test('Should respond with JSON object equal to what we submit', async ()=>{
-        const res =await (request(app).post('/api/deliverables/categories')).send(
-            {
-                "CategoryName":'Assingment'
-            }
-        )
-        expect(res.body).toEqual(
-            [
-                {"CategoryName":'Assingment'}])
-    })
+        expect(res.body).toEqual
+        ([{
+            ...data,
+            CategoryID: expect.any(Number)
+        }])
     
+        })
 })

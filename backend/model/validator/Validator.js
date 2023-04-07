@@ -24,8 +24,10 @@ class Validator{
     put = (value) => this.validate(this.putSchema, value);
     //put schema
     delete = (value) => this.validate(this.deleteSchema, value);
+    
     //properties
     idSchema = joi.number().integer().min(1);
+    
     //helpers
     reportErrors = (errors) => errors.details.map((detail) => detail.message);
 }
