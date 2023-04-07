@@ -1,0 +1,11 @@
+.association-container{
+    width: 70%;
+    justify-content: center;
+    align-items: center;
+}
+.users-list{
+    margin-left: 10px;
+}
+.deliverable-profiles{
+    margin-right: 10px;
+}

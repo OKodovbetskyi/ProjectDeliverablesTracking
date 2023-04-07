@@ -1,0 +1,7 @@
+.container{
+    display: flex;
+    flex-direction: row;
+}
+.users-list{
+    margin-left: 10px;
+}
