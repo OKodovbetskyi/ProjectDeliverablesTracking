@@ -7,9 +7,10 @@ const ManagerPage = () => {
   return (
     <div>
     <Header />
+    <h2 className='underline'>Quick Actions</h2>
     <Link to='managedevs'>Manage Deliverables</Link>
     <Link to='profiles'>Deliverable Profiles</Link>
-    <Link to='profilesbuilder'>Deliverable Profiles</Link>
+    <Link to='associatedeliverable'>Associate Deliverable</Link>
     </div>
     
   )

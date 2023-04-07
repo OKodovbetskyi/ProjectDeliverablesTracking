@@ -25,12 +25,20 @@ const navigate = useNavigate();
 
 
 
-const DeliverableCard = ({deliverable,clickHandler}) => {
+const DeliverableCard = ({deliverable,clickHandler= ()=>{console.log('please assign click handler to card')}, assigned}) => {
  
   return (
     <div className="deliverableCard-container" draggable="true" onClick={()=>clickHandler(deliverable)}>
+      <div className='devInfo'>
       <p>{deliverable.DeliverableTitle}</p>
       <p>{deliverable.CategoryName}</p>
+      </div>
+      {
+        assigned && <Button  variant="contained" color="error">
+        DISMISS
+      </Button>
+      }
+   
     </div>
   )
 }

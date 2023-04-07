@@ -1,0 +1,33 @@
+import React from 'react'
+import Header from '../components/Header/Header'
+import UserCard from '../components/UserCard'
+import './DeliverableAssociation.css';
+import { TextField } from '@mui/material';
+import useLoad from '../API/useLoad';
+const DeliverableAssociation = () => {
+  const [USERSDATA, ,loadingMessageUser, loadUsers] = useLoad('/users');
+
+  return (
+    <div>
+          <Header userType='admin'/>
+        <main className='association-container'>
+        <div className='users-list'>
+        <h2>List of students</h2>
+        <TextField
+            id="standard-basic"
+            label="Search Student"
+            variant="standard"
+            style={{ width: '100%' }}
+            />
+        {USERSDATA.length>0 ? 
+        USERSDATA.map((user)=><UserCard user={user} />)
+        : loadingMessageUser
+        }
+        </div>
+      
+        </main>
+    </div>
+  )
+}
+
+export default DeliverableAssociation

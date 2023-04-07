@@ -37,12 +37,12 @@
 }
  div.StaticPanel.PanelLevel5 {
 	 border: 1px solid #e5f2ff;
-	 color: orange;
+	 color: rgb(195, 43, 251);
 	 font-weight: 300;
 }
 div.StaticPanel.PanelLevel6 {
 	border: 1px solid #e5f2ff;
-	color: orange;
+	color: rgb(170, 0, 255);
 	font-weight: 300;
 }
  div.Panel {
@@ -123,7 +123,7 @@ div.StaticPanel.PanelLevel6 {
 	 border: 1px solid orange;
 }
  div.Panel.PanelLevel5 > header {
-	 background: #f5a147;
+	 background: rgb(195, 43, 251);
 }
  div.Panel.PanelLevel5 > header > span.title {
 	 color: white;

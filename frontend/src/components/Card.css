@@ -3,11 +3,13 @@
     display: inline-block;
     width: 250px;
     padding: 20px;
-    background: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
  
 }
 Button.Button-Card{
@@ -23,6 +25,16 @@ Button.Button-Card.Edit{
     background-color: gray;
 }
 .deliverableCard-container{
-    border: 2px solid orange;
-    margin: 5px;
+    background-color: rgb(195, 43, 251);
+    color: aliceblue;
+    font-weight: bold;
+    margin: 3px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.dismissButton{
+    width: 25%;
 }

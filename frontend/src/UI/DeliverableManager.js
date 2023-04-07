@@ -17,7 +17,7 @@ const DeliverableManager = () => {
   const [categories, ,loadingMessageCat, loadCategories] = useLoad(categoriesendpoint);
 const [feedback, setFeedBack] = useState(true);
 const [message, showMessage] = useState(false);
-  let displaysuccess = "styles.default";
+let displaysuccess = "styles.default";
 const reversed = [...DELIVERABLES_DATA].reverse();
 const deliverables = reversed.map((deliverable)=><Panel.Container><DeliverablePanel key={deliverable.DeliverableID} deliverable = {deliverable} categories={categories} reloadDeliverables={()=>loadDeliverables('/deliverables')}/></Panel.Container>);
 

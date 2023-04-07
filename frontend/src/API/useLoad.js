@@ -9,7 +9,6 @@ const useLoad = (endpoint) => {
       response.isSuccess
         ? setRecords(response.result)
         : setLoadingMessage(response.message)
-     
     }
    
     useEffect(()=>{loadRecords(endpoint)},[endpoint])

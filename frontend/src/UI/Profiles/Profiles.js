@@ -32,7 +32,9 @@ const [message, showMessage] = useState(false);
   return (
     <div className='container'>
         <Header userType="admin"/>
-        <div className="MessageHolder">{message && <CustomAlert  feedback={feedback}/> }</div>
+        <div className="MessageHolder">
+        {message && <CustomAlert  feedback={feedback}/> }
+        </div>
         <div className='profile-body'>
         <h3>Profiles</h3>
         <Button 

@@ -5,7 +5,7 @@ import Panel from './Panel'
 import DeliverableForm from './Deliverable/DeliverablesForm'
 import API from '../API/API'
 
-const DeliverablePanel = ({deliverable ,categories,reloadDeliverables}) => {
+const DeliverablePanel = ({deliverable ,categories,reloadDeliverables, assign, handleAssign}) => {
     const [selectedForm, setSelectedForm] = useState(0);
     const handleModify = (id) =>{setSelectedForm(id === selectedForm ? 0 : id)}
     const handleDelete = async (id) =>{
@@ -18,7 +18,6 @@ const DeliverablePanel = ({deliverable ,categories,reloadDeliverables}) => {
                 }
       }
     const handleSubmit = async (deliverable)=>{
-        console.log("deliverable")
         const response = await API.put(`/deliverables/${deliverable.DeliverableID}` , deliverable);
         if (response.isSuccess){
             reloadDeliverables("/deliverables")
@@ -28,7 +27,7 @@ const DeliverablePanel = ({deliverable ,categories,reloadDeliverables}) => {
                 }
     
       }
-
+ 
   return (
   <Panel 
 key={deliverable.DeliverableID}
@@ -42,7 +41,14 @@ level={5}
 <ToolTipDecorator message='Delete deliverable'>
   <ActionAdd showText onClick={()=>handleDelete(deliverable.DeliverableID)} buttonText="Delete" />
 </ToolTipDecorator>
-  </ActionTray>
+{
+assign && 
+<ToolTipDecorator message='Assign deliverable to profile'>
+<ActionAdd showText onClick={()=>handleAssign(deliverable.DeliverableID)} buttonText="Assign" />
+</ToolTipDecorator>
+}
+</ActionTray>
+
   {
     (selectedForm === deliverable.DeliverableID) &&
     <DeliverableForm 

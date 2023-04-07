@@ -40,26 +40,19 @@ const isValidRecord = (deliverable) =>{
 }
 //////////////////////////////////////////////
 const handleSubmit = (e) =>{
- 
   e.preventDefault();
   if (isValidRecord(record)){
     onSubmit(record)
   } else{
     setErrors({...errors})
   }
- 
-  
 }
 ///////////////////////////////////////////////
 const handleChange = (e) =>{
   const {name , value} = e.target;
   const newValue = conformance.includes(name) ? parseInt(value) : value;
-  setRecord({
-    ...record, [name]: newValue}
-  )
-  setErrors({
-    ...errors, [name]: isValid[name](newValue) ? null : errorMessage[name]
-  })
+  setRecord({...record, [name]: newValue})
+  setErrors({...errors, [name]: isValid[name](newValue) ? null : errorMessage[name]})
 }
 //////////////////////////////////////////////
   return[record, errors, handleChange,handleSubmit]

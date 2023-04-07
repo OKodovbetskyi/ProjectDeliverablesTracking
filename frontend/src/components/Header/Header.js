@@ -12,10 +12,22 @@ export const Header = ({userType}) => {
       <div className="navigation">
      
       {userType==="admin" &&  
-      <Link to={urls[0]}>Admin Panel</Link>}
-      {userType==="admin" &&  
-      <Link to={urls[1]}>Profiles</Link>}
+      <>
+      <Link to={urls[0]}>Admin Panel</Link>
       <Link to='/'> Log Out</Link>
+      </>}
+      {userType==="admin" && 
+      <> 
+      <Link to={urls[1]}>Profiles</Link>
+      <Link to='/'> Log Out</Link>
+      </>}
+       {userType===null && 
+       <> 
+      <Link to={urls[1]}>Register</Link>
+      <Link to={urls[1]}>Login</Link>
+      </>}
+
+    
       </div>
     
     </div>
