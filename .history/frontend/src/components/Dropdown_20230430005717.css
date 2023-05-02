@@ -1,0 +1,33 @@
+.dropdown-container{
+    border: 1px solid darkblue;
+    margin: 0;
+    position: relative;
+}
+.dropdown-clickable{
+    background-color: lightblue;
+    margin: 0;
+    padding: 5px;
+}
+ul {
+    list-style: none;
+    padding: 0;
+  }
+.deopdown-item {
+    cursor: pointer;
+   
+  }
+  li:hover {
+    background-color: #ccc;
+  }
+  li.selected {
+    background-color: #ccc;
+  }
+  li.hidden {
+    display: none;
+  }
+  .arrow-down{
+    position: absolute;
+    right: 0;
+    top: 1;
+
+  }

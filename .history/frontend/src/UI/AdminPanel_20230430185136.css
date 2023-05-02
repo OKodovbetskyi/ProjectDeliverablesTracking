@@ -1,0 +1,17 @@
+a{
+    padding: 5px;
+}
+.underline{
+    padding-bottom: 15px;
+    border-bottom:2px solid rgba(0, 0, 139, 0.645) ;
+}
+.actions-link{
+    font-weight: bold;
+    text-decoration: none;
+    justify-content: center;
+    margin-left: 10px;
+    border-left: 2px solid rgba(0, 0, 139, 0.645) ;
+}
+.actions-link:hover{
+    color: orange;
+}

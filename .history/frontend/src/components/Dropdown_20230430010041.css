@@ -1,0 +1,37 @@
+.dropdown-container{
+    border: 1px solid darkblue;
+    margin: 0;
+    position: relative;
+}
+.dropdown-clickable{
+    background-color: lightblue;
+    margin: 0;
+    padding: 5px;
+    font-size: 12pt;
+}
+ul {
+    list-style: none;
+    padding: 0;
+  }
+.deopdown-item {
+    margin: 2px;
+    border-bottom: 1px solid darkblue;
+   
+  }
+  li:hover {
+    background-color: lightblue;
+  }
+  li.selected {
+    background-color: #ccc;
+    font-size: 12pt;
+  }
+  li.hidden {
+    display: none;
+  }
+  .arrow-down{
+    margin-top: 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+  }
