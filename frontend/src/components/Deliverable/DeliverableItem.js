@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './DeliverablesItem.module.css'
-import DeliverableSpecs from './DeliverableSpecs';
-export const DeliverableItem = ({deliverable}) => {
+import { DeliverableSpecs } from '../Card';
+export const DeliverableItem = ({type,deliverable}) => {
  console.log(deliverable, "from item");
     const feedback = deliverable.AssignmentDevFeedback !== 'none' ? deliverable.AssignmentDevFeedback: 'No feedback provided';
   return (
@@ -20,11 +20,12 @@ export const DeliverableItem = ({deliverable}) => {
         </div>
        <div className={styles.feedback}>
        <p>Feedback:  {feedback}</p>
-       <button>Submit</button>
+     <button>Submit</button>
        </div>
         
        
     </div>
   )
 }
+
 export default DeliverableItem;

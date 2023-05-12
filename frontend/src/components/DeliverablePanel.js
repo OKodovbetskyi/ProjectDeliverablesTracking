@@ -4,6 +4,8 @@ import ToolTipDecorator from './ToolTipDecorator'
 import Panel from './Panel'
 import DeliverableForm from './Deliverable/DeliverablesForm'
 import API from '../API/API'
+import {DeliverableSpecs} from './Card.js';
+
 
 const DeliverablePanel = ({deliverable ,categories,reloadDeliverables, assign, handleAssign}) => {
     const [selectedForm, setSelectedForm] = useState(0);
@@ -34,10 +36,8 @@ key={deliverable.DeliverableID}
 title={`Title: ${deliverable.DeliverableTitle}`}
 level={5}
 >
-
-  <h5>Deliverable Details</h5>
-  <p>{deliverable.DeliverableDetail}</p>
-  <p>Deliverable Category: {deliverable.CategoryName}</p>
+<DeliverableSpecs deliverable={deliverable}/>
+  
   <ActionTray>
 <ToolTipDecorator message='Modify deliverable'>
   <ActionAdd showText onClick={()=>handleModify(deliverable.DeliverableID)} buttonText="Modify" />

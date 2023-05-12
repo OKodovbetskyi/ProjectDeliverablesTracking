@@ -42,3 +42,7 @@ Button.Button-Card.Edit{
 .MuiButton-root{
     background: white;
 }
+.FeedBackToggle{
+    width: 100%;
+    padding: 3px;
+}
