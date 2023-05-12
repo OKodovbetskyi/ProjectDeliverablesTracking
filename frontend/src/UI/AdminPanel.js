@@ -5,7 +5,9 @@ import './AdminPanel.css';
 import Draggable from './Draggable';
 import Footer from '../components/Footer';
 import { FiAirplay, FiPenTool, FiFolder } from "react-icons/fi";
+
 const ManagerPage = () => {
+
   return (
     <div>
     <Header />
@@ -18,5 +20,7 @@ const ManagerPage = () => {
     
   )
 }
+
+
 
 export default ManagerPage

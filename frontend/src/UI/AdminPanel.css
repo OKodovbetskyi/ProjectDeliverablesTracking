@@ -17,3 +17,43 @@ a{
     color: orange;
     border-left: 2px solid orange;
 }
+.DatePicker{
+    color: azure;
+    border: 1px solid white;
+}
+.DatePicker .MuiInputBase-input {
+    color: white;
+    width: 100%;
+  }
+  
+  .DatePicker .MuiOutlinedInput-root fieldset {
+    border-color: white;
+  }
+  
+  .DatePicker .MuiOutlinedInput-root:hover fieldset {
+    border-color: white;
+  }
+  
+  .DatePicker .MuiOutlinedInput-root.Mui-focused fieldset {
+    border-color: white;
+  }
+  .DatePicker .MuiSvgIcon-root {
+    fill: white;
+  }
+  .model-container {
+    display: flex;
+    height: 80vh;
+    margin: 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    width: 40%;
+  }
+  .model-container>div{
+    margin-top: 20px;
+  }
+ .status-container{
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+ }

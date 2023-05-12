@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import DeliverableSpecs from '../components/Deliverable/DeliverableSpecs';
+import { DeliverableSpecs } from '../components/Card';
 import styles from "./DeliverableManager.module.css";
 import Header from "../components/Header/Header.js"
 import AddDeliverableForm from '../components/Deliverable/DeliverablesForm';
@@ -12,6 +12,8 @@ import CustomAlert from '../components/CustomAlert';
 import { matchByLetterSequence } from '../utils/matchByLetterSequence';
 import { TextField } from '@mui/material';
 import Footer from '../components/Footer';
+
+
 const endpoint = "/deliverables"
 const categoriesendpoint= "/deliverables/categories";
 
@@ -73,6 +75,7 @@ const handleChange = (e) =>{
          {filtered.length>0 ? deliverables: loadingMessageDev}
         </div>
     </div>
+
     <Footer />
     </div>
  

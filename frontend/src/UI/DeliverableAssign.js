@@ -11,15 +11,37 @@ import Dropdown from '../components/Dropdown';
 import { TextField } from '@mui/material';
 import { matchByLetterSequence } from '../utils/matchByLetterSequence';
 import Footer from '../components/Footer';
+import { useSelector } from 'react-redux';
+import Modal from '@mui/material/Modal';
+import Backdrop from '@mui/material/Backdrop';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import Button from '@mui/material/Button';
+
+const object = {
+  AssignmentDevDevID: 0,
+  AssignmentDevUserID: 0,
+  AssignmentDevDuedate: '',
+  AssignmentDevStatus: 'Not Completed'
+}
+
 const DeliverableAssign = () => {
- const {userID}= useParams();
- const [profID, setProfID]= useState();
- const [DeliverableProfiles, ,loadingDeliverableProfiles, loadDeliverableProfiles] = useLoad(`/profiles`);
-    const [ProfileDevs,setProfDevs ,loadingProfileDevs, loadProfDevs] = useLoad(`/profiles/deliverables/`);
-   const [USERSDATA, ,loadingMessageUser, loadUsers] = useLoad(`/users/${userID}`);
-   const [USERSDELIVERABLES, ,loadingMessageUserDecs, loadUsersDevs] = useLoad(`/deliverables/student/${userID}`);
-   const [DELIVERABLES, ,loadingMessagedEVS, loadDevs] = useLoad(`/deliverables`);
-   const [filteredDevs, setFilteredDevs] = useState([]);
+  //Hooks
+  const [record, SetRecord] = useState(object)
+  const [open, setOpen] = React.useState(false);
+  const [selectedDate, setSelectedDate] = useState()
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const {userID}= useParams();
+  const [profID, setProfID]= useState();
+  const state = useSelector(state =>state.DevOptions)
+  console.log(state)
+  const [DeliverableProfiles, ,loadingDeliverableProfiles, loadDeliverableProfiles] = useLoad(`/profiles`);
+  const [ProfileDevs,setProfDevs ,loadingProfileDevs, loadProfDevs] = useLoad(`/profiles/deliverables/`);
+  const [USERSDATA, ,loadingMessageUser, loadUsers] = useLoad(`/users/${userID}`);
+  const [USERSDELIVERABLES, ,loadingMessageUserDecs, loadUsersDevs] = useLoad(`/deliverables/student/${userID}`);
+  const [DELIVERABLES, ,loadingMessagedEVS, loadDevs] = useLoad(`/deliverables`);
+  const [filteredDevs, setFilteredDevs] = useState([]);
    useEffect(() => {
      const deliverablesInProfile = ProfileDevs.map(devIds => devIds.DeliverableID);
      console.log(deliverablesInProfile);
@@ -35,19 +57,12 @@ const DeliverableAssign = () => {
    }, [ProfileDevs]);
  
    const handleAssign = async (ID)=>{
-    const object = {
-      AssignmentDevDevID: ID,
-      AssignmentDevUserID: userID
+    SetRecord({...record, AssignmentDevDevID: ID, AssignmentDevUserID: userID})
+    if (record.AssignmentDevDuedate===""){
+      handleOpen();
     }
-    const response = await API.post(`/deliverables/student/` , object);
-    console.log(response);
-      if (response.isSuccess){
-        loadUsersDevs(`/deliverables/student/${userID}`);
-              }else{
-                 return false;
-              }
   }
-const updateDeliverablesList = (id) =>{
+  const updateDeliverablesList = (id) =>{
   setProfDevs([]);
   setProfID(id);
   loadProfDevs(`/profiles/deliverables/${id}`)
@@ -62,6 +77,22 @@ const handleChange = (e) =>{
   }
 }
 
+const handleModalSelect = async() =>{
+ SetRecord({...record, AssignmentDevDuedate: selectedDate});
+  const response = await API.post(`/deliverables/student/` , record);
+  console.log(response);
+    if (response.isSuccess){
+      loadUsersDevs(`/deliverables/student/${userID}`);
+      SetRecord({  AssignmentDevDevID: 0,
+        AssignmentDevUserID: 0,
+        AssignmentDevDuedate: '',
+        AssignmentDevStatus: 'Not Completed'})
+            }else{
+               return false;
+}
+  handleClose();
+}
+console.log(record)
   return (
     <div>
         <Header userType='admin'/>
@@ -99,6 +130,34 @@ const handleChange = (e) =>{
                deliverable = {deliverable} assign handleAssign={handleAssign}/></Panel.Container>) : <p>No records found</p>}
         </div>
         </div>
+        <Modal
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description">
+        <div className='model-container'>
+        <h3>Please provide additional information</h3>
+        <p>Please select the <b>deadline</b> for this deliverable</p>
+        <DateTimePicker   
+        className='DatePicker'
+        onChange={(newValue) => SetRecord({...record, AssignmentDevDuedate:new Date(newValue).toISOString().slice(0, 19).replace('T', ' ')})}
+        defaultValue={dayjs('2022-04-17')} />
+        <div className='status-container'>
+        <label className='status-label'>Status: </label>
+        <select name="status" id="status">
+            <option value='Not Completed'>Not Completed</option>
+             <option value="In progress">In progress</option>
+             <option value="stuck">Stuck</option>
+            </select>
+        </div>
+          <div>
+          <Button onClick={handleModalSelect} variant="contained" color='success'>
+            Select
+          </Button>
+          </div>
+        </div>
+        
+      </Modal>
         <Footer />
     </div>
   )

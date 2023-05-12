@@ -7,6 +7,7 @@ function HomePage() {
   return (<>
     <div className={styles.HomePage}>
         <Logout />
+        <h2>Upcoming Deliverables</h2>
         <Deliverables />
     </div>
            <Footer />
